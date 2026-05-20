@@ -1,0 +1,41 @@
+flowchart LR
+    %% Diagrama de arquitetura geral do PetCare360
+
+    classDef client fill:#E3F2FD,stroke:#1565C0,stroke-width:1px,color:#0D47A1
+    classDef api fill:#E8F5E9,stroke:#2E7D32,stroke-width:1px,color:#1B5E20
+    classDef business fill:#FFF8E1,stroke:#F9A825,stroke-width:1px,color:#5D4037
+    classDef data fill:#F3E5F5,stroke:#6A1B9A,stroke-width:1px,color:#4A148C
+    classDef support fill:#ECEFF1,stroke:#455A64,stroke-width:1px,color:#263238
+    classDef iot fill:#FFF3E0,stroke:#EF6C00,stroke-width:1px,color:#E65100
+
+    Usuario["Tutor / Professor / Cliente API"]:::client
+    Swagger["Swagger UI / Postman"]:::client
+    Collar["Coleira Inteligente<br/>Dados IoT simulados"]:::iot
+
+    Controllers["Controllers REST<br/>Auth, Pets, IoT, Monitoring"]:::api
+    DTOs["DTOs<br/>Requests e Responses"]:::api
+    Services["Services<br/>Regras de negocio"]:::business
+    Mapper["PetMapper<br/>Conversao Entity -> DTO"]:::business
+
+    Repositories["Repositories<br/>Spring Data JPA"]:::data
+    Oracle["Oracle SQL<br/>users, pets, devices, sensor_data, alerts"]:::data
+
+    Security["Security<br/>JWT + BCrypt"]:::support
+    Cache["Cache<br/>@Cacheable / @CacheEvict"]:::support
+    Exceptions["Exception Handler<br/>Erros padronizados"]:::support
+    SwaggerDoc["OpenAPI / Swagger<br/>Documentacao da API"]:::support
+
+    Usuario --> Swagger
+    Swagger --> Controllers
+    Collar -->|"POST /api/iot/data"| Controllers
+
+    Controllers --> DTOs
+    Controllers --> Services
+    Services --> Mapper
+    Services --> Repositories
+    Repositories --> Oracle
+
+    Controllers --> SwaggerDoc
+    Services --> Security
+    Services --> Cache
+    Services --> Exceptions

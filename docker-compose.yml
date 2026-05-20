@@ -1,0 +1,53 @@
+services:
+  oracle-petcare:
+    container_name: oracle-petcare
+    image: gvenzl/oracle-xe:21-slim
+    ports:
+      - "1521:1521"
+    networks:
+      - petcare-network
+    volumes:
+      - oracle-petcare-data:/opt/oracle/oradata
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      ORACLE_PASSWORD: ${ORACLE_PASSWORD}
+      APP_USER: ${ORACLE_APP_USER}
+      APP_USER_PASSWORD: ${ORACLE_APP_PASSWORD}
+    healthcheck:
+      test: ["CMD", "healthcheck.sh"]
+      interval: 30s
+      timeout: 10s
+      retries: 10
+      start_period: 90s
+
+  petcare360-api:
+    container_name: petcare360-api
+    build:
+      context: ./petcare360_java
+      dockerfile: ../Dockerfile.petcare360
+    ports:
+      - "8080:8080"
+    networks:
+      - petcare-network
+    env_file:
+      - .env
+    environment:
+      ORACLE_DB_URL: jdbc:oracle:thin:@oracle-petcare:1521/XEPDB1
+      ORACLE_DB_USERNAME: ${ORACLE_APP_USER}
+      ORACLE_DB_PASSWORD: ${ORACLE_APP_PASSWORD}
+      PETCARE360_JWT_SECRET: ${PETCARE360_JWT_SECRET}
+      PETCARE360_JWT_EXPIRATION_MINUTES: ${PETCARE360_JWT_EXPIRATION_MINUTES}
+    depends_on:
+      oracle-petcare:
+        condition: service_healthy
+    restart: unless-stopped
+
+volumes:
+  oracle-petcare-data:
+    name: oracle-petcare-data
+
+networks:
+  petcare-network:
+    name: petcare-network

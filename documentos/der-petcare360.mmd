@@ -1,0 +1,55 @@
+erDiagram
+    USERS ||--o{ PETS : "cadastra"
+    PETS ||--|| DEVICES : "possui"
+    DEVICES ||--o{ SENSOR_DATA : "gera historico"
+    PETS ||--o{ ALERTS : "recebe"
+
+    USERS {
+        NUMBER id PK "identity"
+        VARCHAR2 name "120, not null"
+        VARCHAR2 email UK "160, not null"
+        VARCHAR2 password_hash "255, not null"
+        TIMESTAMP created_at "not null"
+    }
+
+    PETS {
+        NUMBER id PK "identity"
+        NUMBER user_id FK "not null"
+        VARCHAR2 name "120, not null"
+        NUMBER age "not null"
+        NUMBER weight "10,2, not null"
+        VARCHAR2 breed "120, not null"
+        VARCHAR2 device_id UK "80, not null"
+        TIMESTAMP created_at "not null"
+    }
+
+    DEVICES {
+        NUMBER id PK "identity"
+        VARCHAR2 device_id UK "80, not null"
+        NUMBER pet_id FK_UK "not null"
+        VARCHAR2 status "20, not null"
+        NUMBER battery "0 a 100"
+        TIMESTAMP last_seen "ultima telemetria"
+    }
+
+    SENSOR_DATA {
+        NUMBER id PK "identity"
+        NUMBER device_id_fk FK "not null"
+        TIMESTAMP sensor_timestamp "not null"
+        NUMBER temperature "5,2, not null"
+        NUMBER heart_rate "not null"
+        NUMBER activity_level "not null"
+        NUMBER latitude "10,6"
+        NUMBER longitude "10,6"
+        NUMBER battery "0 a 100"
+        VARCHAR2 status "20, not null"
+    }
+
+    ALERTS {
+        NUMBER id PK "identity"
+        NUMBER pet_id FK "not null"
+        VARCHAR2 type "40, not null"
+        VARCHAR2 message "255, not null"
+        VARCHAR2 level_alert "20, not null"
+        TIMESTAMP created_at "not null"
+    }

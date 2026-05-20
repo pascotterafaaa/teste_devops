@@ -1,0 +1,4 @@
+.env
+petcare360_java/
+*.log
+.DS_Store
