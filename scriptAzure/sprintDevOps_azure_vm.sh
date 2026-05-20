@@ -12,7 +12,7 @@ LOCATION="mexicocentral"
 VM_SIZE="Standard_B2als_v2"
 IMAGE="almalinux:almalinux-x86_64:10-gen2:latest"
 ADMIN_USER="admlnx"
-ADMIN_PASS='Fiap@2'
+ADMIN_PASS='Fiap@2tdsvms'
 
 echo "Criando Resource Group: $RESOURCE_GROUP..."
 az group create \
