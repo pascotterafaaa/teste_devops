@@ -12,7 +12,7 @@ LOCATION="mexicocentral"
 VM_SIZE="Standard_B2als_v2"
 IMAGE="almalinux:almalinux-x86_64:10-gen2:latest"
 ADMIN_USER="admlnx"
-ADMIN_PASS='Fiap@2tdsvms'
+ADMIN_PASS='Fiap@2'
 
 echo "Criando Resource Group: $RESOURCE_GROUP..."
 az group create \
@@ -33,13 +33,7 @@ az vm create \
   --os-disk-size-gb 64 \
   --output table
 
-echo "Abrindo porta 22 (SSH)..."
-az vm open-port \
-  --resource-group "$RESOURCE_GROUP" \
-  --name "$VM_NAME" \
-  --port 22 \
-  --priority 1000 \
-  --output none
+echo "Porta 22 (SSH) ja e criada pela Azure durante o provisionamento da VM."
 
 echo "Abrindo porta 5000 (API Flask)..."
 az vm open-port \
